@@ -6,27 +6,32 @@ const parse = (data: string) => {
     return {time, distance}
 }
 
-function solveParableGreaterZero(p: number, q: number) {
-    const summand = Math.sqrt(p * p / 4 - q);
-    const zeroPoints = [p / 2 + summand, p / 2 - summand].sort((a, b) => Math.sign(a - b));
+/**
+ * returns an interval of integer numbers matching the inequality:
+ * x²-px+q < 0
+ */
+function solveQuadraticFunctionGreaterZero(p: number, q: number) {
+    const rootPart = Math.sqrt(p * p / 4 - q);
+    const zeros = [p / 2 + rootPart, p / 2 - rootPart].sort((a, b) => Math.sign(a - b));
     const adjustSmallerThan = (n: number, i: number) => {
         if (-n * n + n * p - q == 0) {
             n += i == 0 ? 1 : -1;
         }
         return n;
     }
-    return [Math.ceil(zeroPoints[0]), Math.floor(zeroPoints[1])].map(adjustSmallerThan);
+    return [Math.ceil(zeros[0]), Math.floor(zeros[1])].map(adjustSmallerThan);
 }
 
 const solve = (data: string) => {
     const parsed = parse(data);
     console.log("Star 1: ", parsed.time.map((t, i) => {
         const d = parsed.distance[i];
-        return solveParableGreaterZero(t, d);
+        // Idea: x = time Charging: x*(t-x) > d <=> -x² + tx -d > 0 <=> x² - tx + d <0
+        return solveQuadraticFunctionGreaterZero(t, d);
     }).reduce((a, [x, y]) => a * (y - x + 1), 1));
     const t = parseInt(parsed.time.reduce((a, b) => a + b, ""));
     const d = parseInt(parsed.distance.reduce((a, b) => a + b, ""));
-    const intervall = solveParableGreaterZero(t, d);
+    const intervall = solveQuadraticFunctionGreaterZero(t, d);
     console.log("Star 2: ", intervall[1] - intervall[0] + 1);
 }
 console.time("Example");
