@@ -1,9 +1,7 @@
 import {exampleData, starData} from "./07-data";
 
-const toBag = (s: string) => s.split("").reduce((bag, char) => {
-    bag.set(char, (bag.get(char) ?? 0) + 1);
-    return bag;
-}, new Map<string, number>());
+const toBag = (s: string) => s.split("")
+    .reduce((bag, char) => bag.set(char, (bag.get(char) ?? 0) + 1), new Map<string, number>());
 
 const cards = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
 const cards2 = ["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2", "J"];
@@ -59,7 +57,6 @@ const handTypes = [
         },
     }
 ];
-
 const handTypes2 = [
     {
         name: "Five of a kind",
@@ -130,7 +127,6 @@ type THand = {
 }
 type TIndexedHand = THand & { typeIndex: number }
 
-
 const getComparer = (cards: string[]) => (a: TIndexedHand, b: TIndexedHand) => {
     const deltaType = Math.sign(b.typeIndex - a.typeIndex);
     if (deltaType != 0) {
@@ -154,7 +150,7 @@ const parse = (data: string): THand[] => {
     })
 }
 
-function getRanked(parsed: THand[], hands: typeof handTypes, compare: (a: THand, b: THand) => number) {
+function getRanked(parsed: THand[], hands: typeof handTypes, compare: (a: TIndexedHand, b: TIndexedHand) => number) {
     return parsed
         .map(h => {
             return {...h, typeIndex: hands.indexOf(hands.find(t => t.isOfType(h.hand))),}
