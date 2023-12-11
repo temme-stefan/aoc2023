@@ -11,8 +11,8 @@ if (myArgs.length === 0) {
     day = parseInt(myArgs[0]);
 }
 const padLeft = (day) => (day < 10 ? "0" : "") + day;
-const folderNumber = Math.floor((day + 2) / 7);
 const firstSunday = 3;
+const folderNumber = Math.floor((day + firstSunday) / 7);
 const endOfWeek = Math.min(25, folderNumber * 7 + firstSunday);
 const startOfWeek = Math.max(1, folderNumber * 7 + firstSunday - 6);
 
